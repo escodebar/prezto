@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 #
 # Executes commands at the start of an interactive session.
 #
@@ -5,9 +12,26 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# Source local environment
+if [[ -s "${ZDOTDIR:-$HOME}/.env" ]]; then
+  source "${ZDOTDIR:-$HOME}/.env"
+fi
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Customize to your needs...
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='fd --type -f'
+
+source ~/.cargo/env
+
+source <(fly completion --shell zsh)
+source <(kubectl completion zsh)
+
+stty -ixon <$TTY >$TTY
+alias mux="tmuxp"
+alias v="fasd -e vim"
